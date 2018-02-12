@@ -20,9 +20,9 @@ class ViewsAddTestCase(TestCase):
         self.assertEqual(RadioStation.objects.all().count(), 1)
         # existing radio station should have the data provided in the request
         self.assertTrue(RadioStation.objects.filter(name=data["name"]).exists())
-        # if we post again with the same data, as name is unique we should get an errora 200
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["name"], ['radio station with this name already exists.'])
+        # if we post again with the same data, as name is unique we should get
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(RadioStation.objects.all().count(), 1)
 
     def test_add_artist(self):
         # post with data
@@ -98,5 +98,5 @@ class ViewsGetTestCase(TestCase):
                 "performer": 'performer_name',
                 "start": '2014-10-21T00:00:00',
                 "end": '2014-10-28T00:00:00'}
-        response = client.get(reverse('get_songs_plays', kwargs={"song_id": 1}), data)
-        print("yes")
+        response = client.get(reverse('get_songs_plays', kwargs={"song_id": self.song.id}), data)
+        self.assertEqual(response.status_code, 200)
