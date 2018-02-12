@@ -7,15 +7,11 @@ from monitor.models import RadioStation, Performer, Song, Play
 client = Client()
 
 
-class ViewsTestCase(TestCase):
+class ViewsAddTestCase(TestCase):
     """
     Test for the monitor api views
     """
     def test_add_channel(self):
-        # post with no data
-        response = client.post(reverse('add_channel'))
-        self.assertEqual(response.status_code, 400)
-
         # post with data
         data = {"name": "new channel"}
         response = client.post(reverse('add_channel'), data)
@@ -24,16 +20,11 @@ class ViewsTestCase(TestCase):
         self.assertEqual(RadioStation.objects.all().count(), 1)
         # existing radio station should have the data provided in the request
         self.assertTrue(RadioStation.objects.filter(name=data["name"]).exists())
-        # if we post again with the same data, as name is unique we should get an error
-        response = client.post(reverse('add_channel'), data)
-        self.assertEqual(response.status_code, 400)
+        # if we post again with the same data, as name is unique we should get an errora 200
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["name"], ['radio station with this name already exists.'])
 
     def test_add_artist(self):
-        # post with no data
-        response = client.post(reverse('add_performer'))
-        self.assertEqual(response.status_code, 400)
-
         # post with data
         data = {"name": "new performer"}
         response = client.post(reverse('add_performer'), data)
@@ -42,21 +33,12 @@ class ViewsTestCase(TestCase):
         self.assertEqual(Performer.objects.all().count(), 1)
         # existing radio station should have the data provided in the request
         self.assertTrue(Performer.objects.filter(name=data["name"]).exists())
-        # if we post again with the same data, as name is unique we should get an error
+        # if we post again with the same data, as name is unique we should get an 200
         response = client.post(reverse('add_performer'), data)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["name"], ['performer with this name already exists.'])
 
     def test_add_song(self):
-        # post with no data
-        response = client.post(reverse('add_song'))
-        self.assertEqual(response.status_code, 400)
-
-        # post with missing data
-        data = {"title": "new song"}
-        response = client.post(reverse('add_song'), data)
-        self.assertEqual(response.status_code, 400)
-
         # post with data
         data = {"title": "new song", "performer": "new performer"}
         response = client.post(reverse('add_song'), data)
@@ -76,15 +58,6 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_add_play(self):
-        # post with no data
-        response = client.post(reverse('add_play'))
-        self.assertEqual(response.status_code, 400)
-
-        # post with missing data
-        data = {"title": "new song"}
-        response = client.post(reverse('add_play'), data)
-        self.assertEqual(response.status_code, 400)
-
         # post with data
         data = {"title": "new song",
                 "performer": "new performer",
@@ -110,3 +83,20 @@ class ViewsTestCase(TestCase):
             radio_station=RadioStation.objects.get(name=data["channel"]),
             start=data["start"],
             end=data["end"]))
+
+
+class ViewsGetTestCase(TestCase):
+    def setUp(self):
+        self.performer = Performer.objects.create(name='Performer')
+        self.song = Song.objects.create(performer=self.performer, title='Song')
+        self.radio_station = RadioStation.objects.create(name='Radio')
+        self.play1 = Play.objects.create(song=self.song, radio_station=self.radio_station,
+                                         start="2014-10-25T00:00:00", end="2014-10-25T00:03:00")
+
+    def test_get_song_plays(self):
+        data = {"title": 'song_name',
+                "performer": 'performer_name',
+                "start": '2014-10-21T00:00:00',
+                "end": '2014-10-28T00:00:00'}
+        response = client.get(reverse('get_songs_plays', kwargs={"song_id": 1}), data)
+        print("yes")

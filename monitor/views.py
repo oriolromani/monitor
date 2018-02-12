@@ -17,7 +17,7 @@ def add_channel(request):
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response(status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -31,7 +31,7 @@ def add_performer(request):
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -70,3 +70,20 @@ def add_play(request):
             return Response(serializer.data, status.HTTP_201_CREATED)
         return Response(serializer.data, status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def get_songs_plays(request, song_id):
+    """
+    Get the plays for the song with id song_id
+    :param request:
+    :param song_id:
+    :return:
+    """
+    try:
+        song = Song.objects.get(id=song_id)
+        plays = song.plays.all()
+        serializer = PlaySerializer(plays, many=True)
+        return Response(serializer.data)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
