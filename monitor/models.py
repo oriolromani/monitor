@@ -34,7 +34,7 @@ class Play(models.Model):
     """
     song = models.ForeignKey(Song, related_name='plays', on_delete=models.CASCADE)
     radio_station = models.ForeignKey(RadioStation, related_name='plays', on_delete=models.CASCADE)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    start = models.DateTimeField()
+    end = models.DateTimeField()
 
 

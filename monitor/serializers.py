@@ -23,7 +23,7 @@ class SongSerializer(serializers.ModelSerializer):
 class PlaySerializer(serializers.ModelSerializer):
     class Meta:
         model = Play
-        fields = ('id', 'song', 'radio_station', 'start_time', 'end_time')
+        fields = ('id', 'start', 'end')
 
 
 
