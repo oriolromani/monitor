@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -30,4 +31,22 @@ def add_performer(request):
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def add_song(request):
+    """
+    Insert a new song
+    :param request:
+    :return:
+    """
+    serializer = SongSerializer(data=request.data)
+    if serializer.is_valid() and 'performer' in request.data:
+        performer, _ = Performer.objects.get_or_create(name=request.data['performer'])
+
+        _, created = Song.objects.get_or_create(performer=performer, title=request.data['title'])
+        if created:
+            return Response(serializer.data, status.HTTP_201_CREATED)
+        return Response(serializer.data, status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -47,6 +47,23 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.data["name"], ['performer with this name already exists.'])
 
+    def test_add_song(self):
+        # post with no data
+        response = client.post(reverse('add_song'))
+        self.assertEqual(response.status_code, 400)
 
+        # post with missing data
+        data = {"title": "new song"}
+        response = client.post(reverse('add_song'), data)
+        self.assertEqual(response.status_code, 400)
 
+        # post with data
+        data = {"title": "new song", "performer": "new performer"}
+        response = client.post(reverse('add_song'), data)
+        self.assertEqual(response.status_code, 201)
+
+        # post again with same data
+        data = {"title": "new song", "performer": "new performer"}
+        response = client.post(reverse('add_song'), data)
+        self.assertEqual(response.status_code, 200)
 

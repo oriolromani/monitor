@@ -17,7 +17,7 @@ class PerformerSerializer(serializers.ModelSerializer):
 class SongSerializer(serializers.ModelSerializer):
     class Meta:
         model = Song
-        fields = ('id', 'created', 'name', 'performer')
+        fields = ('id', 'created', 'title')
 
 
 class PlaySerializer(serializers.ModelSerializer):
