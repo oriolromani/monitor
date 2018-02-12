@@ -24,7 +24,7 @@ class Song(models.Model):
     Model for songs
     """
     created = models.DateTimeField(auto_now_add=True)
-    name = models.CharField(max_length=100)
+    title = models.CharField(max_length=100)
     performer = models.ForeignKey(Performer, related_name='songs', on_delete=models.CASCADE)
 
 
