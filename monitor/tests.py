@@ -94,9 +94,9 @@ class ViewsGetTestCase(TestCase):
                                          start="2014-10-25T00:00:00", end="2014-10-25T00:03:00")
 
     def test_get_song_plays(self):
-        data = {"title": 'song_name',
-                "performer": 'performer_name',
+        data = {"title": self.song.title,
+                "performer": self.performer.name,
                 "start": '2014-10-21T00:00:00',
                 "end": '2014-10-28T00:00:00'}
-        response = client.get(reverse('get_songs_plays', kwargs={"song_id": self.song.id}), data)
+        response = client.get(reverse('get_song_plays'), data)
         self.assertEqual(response.status_code, 200)
