@@ -229,7 +229,7 @@ def check_top():
      'code': 0}
     """
     res = json.loads(get_response('get_top', {
-        "channels": json.dumps(plays.keys()),
+        "channels": json.dumps(list(plays.keys())),
         "start": datetime.datetime(2014, 1, 8).isoformat(),
         "limit": 10
     }))
@@ -255,5 +255,5 @@ if __name__ == '__main__':
         add_plays()
     check_channel_plays()
     check_song_plays()
-    # check_top()
+    check_top()
     print("Success!")
