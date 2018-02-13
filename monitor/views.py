@@ -4,7 +4,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from monitor.models import RadioStation, Performer, Song, Play
-from monitor.serializers import RadioStationSerializer, PerformerSerializer, SongSerializer, PlaySerializer
+from monitor.serializers import RadioStationSerializer, PerformerSerializer, SongSerializer, PlaySongSerializer,\
+    PlayChannelSerializer
 
 
 @api_view(['POST'])
@@ -86,7 +87,28 @@ def get_song_plays(request):
         start_date = date_parse(data['start'])
         end_date = date_parse(data['end'])
         plays = song.plays.filter(start__range=(start_date, end_date))
-        serializer = PlaySerializer(plays, many=True)
+        serializer = PlaySongSerializer(plays, many=True)
+        data = {"result": serializer.data,
+                "code": 0}
+        return Response(data)
+    except ObjectDoesNotExist:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def get_channel_plays(request):
+    """
+    Get all the songs played on a given channel between two dates
+    :param request:
+    :return:
+    """
+    data = request.GET
+    try:
+        start_date = date_parse(data['start'])
+        end_date = date_parse(data['end'])
+        plays = Play.objects.filter(radio_station__name=data['channel'],
+                                    start__range=(start_date, end_date)).select_related('song')
+        serializer = PlayChannelSerializer(plays, many=True)
         data = {"result": serializer.data,
                 "code": 0}
         return Response(data)

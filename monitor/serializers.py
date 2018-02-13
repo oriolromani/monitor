@@ -20,14 +20,27 @@ class SongSerializer(serializers.ModelSerializer):
         fields = ('id', 'created', 'title')
 
 
-class PlaySerializer(serializers.ModelSerializer):
+class PlaySongSerializer(serializers.ModelSerializer):
     channel = serializers.SerializerMethodField()
 
     class Meta:
         model = Play
-        fields = ('id', 'start', 'end', 'channel')
+        fields = ('start', 'end', 'channel')
 
     def get_channel(self, obj):
         return obj.radio_station.name
 
 
+class PlayChannelSerializer(serializers.ModelSerializer):
+    performer = serializers.SerializerMethodField()
+    title = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Play
+        fields = ('performer', 'title', 'start', 'end')
+
+    def get_performer(self, obj):
+        return obj.song.performer.name
+
+    def get_title(self, obj):
+        return obj.song.title

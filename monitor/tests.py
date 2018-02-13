@@ -1,3 +1,6 @@
+import datetime
+import json
+
 from django.test import TestCase, Client
 from django.urls import reverse
 
@@ -100,3 +103,17 @@ class ViewsGetTestCase(TestCase):
                 "end": '2014-10-28T00:00:00'}
         response = client.get(reverse('get_song_plays'), data)
         self.assertEqual(response.status_code, 200)
+        content = json.loads(response.content.decode())
+        self.assertEqual(content["code"], 0)
+        self.assertEqual(content["result"][0]["channel"], self.radio_station.name)
+
+    def test_get_channel_plays(self):
+        data = {
+            "channel": self.radio_station.name,
+            "start": datetime.datetime(2013, 1, 1).isoformat(),
+            "end": datetime.datetime(2015, 1, 1).isoformat()}
+        response = client.get(reverse('get_channel_plays'), data)
+        self.assertEqual(response.status_code, 200)
+        content = json.loads(response.content.decode())
+        self.assertEqual(content["code"], 0)
+        self.assertEqual(content["result"][0]["title"], self.song.title)
