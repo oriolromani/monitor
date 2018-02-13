@@ -1,3 +1,4 @@
+from dateutil.parser import parse as date_parse
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -75,15 +76,19 @@ def add_play(request):
 @api_view(['GET'])
 def get_song_plays(request):
     """
-    Get the plays for the song with id song_id
+    Get the plays for a song between two dates
     :param request:
-    :param song_id:
     :return:
     """
+    data = request.GET
     try:
-        song = Song.objects.get(title=request)
-        plays = song.plays.all()
+        song = Song.objects.get(title=data['title'], performer__name=data['performer'])
+        start_date = date_parse(data['start'])
+        end_date = date_parse(data['end'])
+        plays = song.plays.filter(start__range=(start_date, end_date))
         serializer = PlaySerializer(plays, many=True)
-        return Response(serializer.data)
+        data = {"result": serializer.data,
+                "code": 0}
+        return Response(data)
     except ObjectDoesNotExist:
         return Response(status=status.HTTP_400_BAD_REQUEST)

@@ -5,8 +5,7 @@ import copy
 import datetime
 import dateutil.parser
 import json
-import urllib.parse
-import urllib.request
+import requests
 
 
 GET, POST = range(2)
@@ -38,11 +37,10 @@ def get_response(fct, data, method=GET):
     assert(method in (GET, POST))
     url = 'http://%s:%s/%s' % (hostname, port, fct)
     if method == GET:
-        req = urllib.request.Request('%s?%s' % (url, urllib.parse.urlencode(data).encode('utf8')))
+        response = requests.get(url, data)
     elif method == POST:
-        req = urllib.request.Request(url, urllib.parse.urlencode(data).encode('utf8'))
-    response = urllib.request.urlopen(req)
-    return response.read()
+        response = requests.post(url, data)
+    return response.content.decode()
 
 
 # performer, title, length (in seconds)
@@ -137,7 +135,7 @@ def get_song_plays(song):
     Filter the play dictionary for this particular song.
     """
     song_plays = copy.deepcopy(plays)
-    for channel in song_plays.keys():
+    for channel in list(song_plays.keys()):
         banned = [date for date in song_plays[channel].keys() if
                   song_plays[channel][date] != song]
         for b in banned:
@@ -159,8 +157,8 @@ def check_song_plays():
       'end': '2014-01-01T02:03:00'}, ...], code: 0}
     """
     song3_res = json.loads(get_response('get_song_plays', {
-        "performer": song3[0].encode('utf8'),
-        "title": song3[1].encode('utf8'),
+        "performer": song3[0],
+        "title": song3[1],
         "start": datetime.datetime(2013, 1, 1).isoformat(),
         "end": datetime.datetime(2015, 1, 1).isoformat()
     }))
@@ -257,5 +255,5 @@ if __name__ == '__main__':
         add_plays()
     # check_channel_plays()
     check_song_plays()
-    check_top()
+    # check_top()
     print("Success!")

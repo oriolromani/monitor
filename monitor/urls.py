@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^add_song$', views.add_song, name='add_song'),
     url(r'^add_play$', views.add_play, name='add_play'),
     url(r'^get_song_plays$', views.get_song_plays, name='get_song_plays'),
+    # url(r'^get_channel_plays$', views.get_channel_plays, name='get_channel_plays'),
 ]

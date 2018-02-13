@@ -21,9 +21,13 @@ class SongSerializer(serializers.ModelSerializer):
 
 
 class PlaySerializer(serializers.ModelSerializer):
+    channel = serializers.SerializerMethodField()
+
     class Meta:
         model = Play
-        fields = ('id', 'start', 'end')
+        fields = ('id', 'start', 'end', 'channel')
 
+    def get_channel(self, obj):
+        return obj.radio_station.name
 
 
