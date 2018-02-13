@@ -73,7 +73,7 @@ def add_play(request):
 
 
 @api_view(['GET'])
-def get_songs_plays(request, song_id):
+def get_song_plays(request):
     """
     Get the plays for the song with id song_id
     :param request:
@@ -81,7 +81,7 @@ def get_songs_plays(request, song_id):
     :return:
     """
     try:
-        song = Song.objects.get(id=song_id)
+        song = Song.objects.get(title=request)
         plays = song.plays.all()
         serializer = PlaySerializer(plays, many=True)
         return Response(serializer.data)

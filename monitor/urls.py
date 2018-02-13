@@ -6,5 +6,5 @@ urlpatterns = [
     url(r'^add_performer$', views.add_performer, name='add_performer'),
     url(r'^add_song$', views.add_song, name='add_song'),
     url(r'^add_play$', views.add_play, name='add_play'),
-    url(r'^get_songs_plays/(?P<song_id>[0-9]+)/$', views.get_songs_plays, name='get_songs_plays'),
+    url(r'^get_song_plays$', views.get_song_plays, name='get_song_plays'),
 ]

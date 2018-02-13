@@ -37,9 +37,11 @@ def get_response(fct, data, method=GET):
     """
     assert(method in (GET, POST))
     url = 'http://%s:%s/%s' % (hostname, port, fct)
-    req = urllib.request.Request(url)
-    data = urllib.parse.urlencode(data).encode("utf-8")
-    response = urllib.request.urlopen(req, data=data)
+    if method == GET:
+        req = urllib.request.Request('%s?%s' % (url, urllib.parse.urlencode(data).encode('utf8')))
+    elif method == POST:
+        req = urllib.request.Request(url, urllib.parse.urlencode(data).encode('utf8'))
+    response = urllib.request.urlopen(req)
     return response.read()
 
 
@@ -253,7 +255,7 @@ if __name__ == '__main__':
     port = args.port
     if args.add_data:
         add_plays()
-    check_channel_plays()
+    # check_channel_plays()
     check_song_plays()
     check_top()
     print("Success!")
