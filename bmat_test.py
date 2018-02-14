@@ -200,7 +200,7 @@ def get_top(start, channels):
                 pc[(performer, title)] += 1
             elif previous_start <= date < start:
                 previous_pc[(performer, title)] += 1
-    res = [].encode('utf8')
+    res = []
     previous_pos = sorted(previous_pc.keys(), key=lambda s: -previous_pc[s])
     for song in pc.keys():
         try:

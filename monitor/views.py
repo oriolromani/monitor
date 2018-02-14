@@ -10,7 +10,7 @@ from rest_framework.response import Response
 
 from monitor.models import RadioStation, Performer, Song, Play
 from monitor.serializers import RadioStationSerializer, PerformerSerializer, SongSerializer, PlaySongSerializer,\
-    PlayChannelSerializer
+    PlayChannelSerializer, serialize_top_songs
 
 
 @api_view(['POST'])
@@ -135,8 +135,25 @@ def get_top(request):
     :return:
     """
     data = request.GET
+    channels = json.loads(data["channels"])
     start = date_parse(data["start"])
     end = start + timedelta(days=6)
+    plays = Play.objects.filter(radio_station__name__in=channels, start__range=(start, end))
     songs = Song.objects.annotate(num_plays=Count('plays')).filter(
-        plays__in=Play.objects.filter(radio_station__name__in=json.loads(data["channels"]),
-                                      start__range=(start, end))).order_by('num_plays')
+        plays__in=plays).order_by('-num_plays')[:40]
+
+    start_previous_week = start - timedelta(days=7)
+    end_previous_week = start - timedelta(days=1)
+    plays_previous_week = Play.objects.filter(radio_station__name__in=channels,
+                                              start__range=(start_previous_week, end_previous_week))
+    songs_previous_week = Song.objects.annotate(num_plays=Count('plays')).filter(
+        plays__in=plays_previous_week).order_by('-num_plays')[:40]
+
+    serialized_data = serialize_top_songs(songs, plays, songs_previous_week, plays_previous_week)
+    return Response(serialized_data)
+
+
+
+
+
+
