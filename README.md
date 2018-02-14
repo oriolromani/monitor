@@ -32,3 +32,24 @@ Install the requirements for the script by running:
 Run the script to test the service:
 
     python test.py --add-data
+
+## In case you wouldn't like to use Docker
+To run the server without using docker you should first create a python3 virtualenv as explained before and install the
+requirements of the project by running:
+
+    pip install -r requirements.txt
+
+Then you would have to [install](https://linode.com/docs/databases/postgresql/how-to-install-postgresql-on-ubuntu-16-04/)
+PostgreSQL and create a DB like:
+```
+   sudo -i -u postgres
+   createdb bmat
+```
+
+Then you would have to migrate the django models to the DB by running:
+
+    python manage.py migrate
+
+And finally run the server by:
+
+    python manage.py runserver
