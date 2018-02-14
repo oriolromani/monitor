@@ -62,9 +62,15 @@ def serialize_top_songs(songs, plays, songs_previous_week, plays_previous_week):
                      "plays": plays.filter(song=song).count(),
                      "rank": rank}
         if song in songs_previous_week:
-            song_data["previous_plays"] = plays_previous_week.filter(song=song).count()
-            # check in which position the song was last week
-            song_data["previous_rank"] = list(songs_previous_week).index(song)
+            previous_plays = plays_previous_week.filter(song=song).count()
+            previous_rank = list(songs_previous_week).index(song)
+        else:
+            previous_plays = 0
+            previous_rank = None
+        song_data["previous_plays"] = previous_plays
+        # check in which position the song was last week
+        song_data["previous_rank"] = previous_rank
+
         result.append(song_data)
     return {"code": 0,
             "result": result}
