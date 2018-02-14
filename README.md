@@ -8,8 +8,9 @@ To run it with docker just follow this steps:
 1. Install [docker](https://docs.docker.com/engine/installation/)
 2. Install [docker-compose](https://docs.docker.com/compose/install/)
 3. Run the following command:
-
+```
     docker-compose up
+```
 
 ## Running the test script
 The script has to be run with python3, so be sure you have it [installed] (http://docs.python-guide.org/en/latest/starting/install3/linux/) on your machine.
