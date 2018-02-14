@@ -82,7 +82,7 @@ DATABASES = {
         'NAME': 'bmat',
         'USER': 'postgres',
         'PASSWORD': '',
-        'HOST': '',
+        'HOST': 'db',
         'PORT': '',
 
     }
