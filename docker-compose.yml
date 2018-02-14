@@ -6,6 +6,8 @@ services:
      POSTGRES_DB: bmat
   web:
     build: .
+    environment:
+      DEPLOY_ENV: "prod"
     ports:
       - 8000:8000
     volumes:

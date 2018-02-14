@@ -82,11 +82,17 @@ DATABASES = {
         'NAME': 'bmat',
         'USER': 'postgres',
         'PASSWORD': '',
-        'HOST': 'db',
+        'HOST': '',
         'PORT': '',
 
     }
 }
+
+# If the server is run in docker, in order to communicate the web service with the db service we have to
+# set the host to db, that is the name of the DB service
+deploy_env = os.getenv('DEPLOY_ENV', None)
+if deploy_env:
+    DATABASES['default']['HOST'] = 'db'
 
 
 # Password validation
