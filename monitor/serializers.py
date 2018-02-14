@@ -44,3 +44,28 @@ class PlayChannelSerializer(serializers.ModelSerializer):
 
     def get_title(self, obj):
         return obj.song.title
+
+
+def serialize_top_songs(songs, plays, songs_previous_week, plays_previous_week):
+    """
+    Serialize top songs according to the format defined in requirements
+    :param songs:
+    :param plays:
+    :param songs_previous_week:
+    :param plays_previous_week:
+    :return:
+    """
+    result = []
+    for rank, song in enumerate(songs):
+        song_data = {"title": song.title,
+                     "performer": song.performer.name,
+                     "plays": plays.filter(song=song).count(),
+                     "rank": rank}
+        if song in songs_previous_week:
+            song_data["previous_plays"] = plays_previous_week.filter(song=song).count()
+            # check in which position the song was last week and compute the rank as in previous step
+            song_data["previous_rank"] = list(songs_previous_week).index(song)
+        result.append(song_data)
+    return {"code": 0,
+            "result": result}
+
