@@ -138,14 +138,18 @@ def get_top(request):
     channels = json.loads(data["channels"])
     start = date_parse(data["start"])
     end = start + timedelta(days=6)
+    # get plays for the selected radio stations in the selected week
     plays = Play.objects.filter(radio_station__name__in=channels, start__range=(start, end))
+    # get 40 top songs ordered by number of plays
     songs = Song.objects.annotate(num_plays=Count('plays')).filter(
         plays__in=plays).order_by('-num_plays')[:40]
 
     start_previous_week = start - timedelta(days=7)
     end_previous_week = start - timedelta(days=1)
+    # get plays for the the selected radio stations in the previous week
     plays_previous_week = Play.objects.filter(radio_station__name__in=channels,
                                               start__range=(start_previous_week, end_previous_week))
+    # get 40 top songs from previous week ordered by number of plays
     songs_previous_week = Song.objects.annotate(num_plays=Count('plays')).filter(
         plays__in=plays_previous_week).order_by('-num_plays')[:40]
 

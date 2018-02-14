@@ -38,7 +38,7 @@ def get_response(fct, data, method=GET):
     url = 'http://%s:%s/%s' % (hostname, port, fct)
     if method == GET:
         response = requests.get(url, data)
-    elif method == POST:
+    else:
         response = requests.post(url, data)
     return response.content.decode()
 
