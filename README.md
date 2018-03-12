@@ -14,9 +14,9 @@ To run it with docker just follow this steps:
 
 ## Running the test script
 Open a new terminal on the same directory.
-The script has to be run with python3, so be sure you have it [installed] (http://docs.python-guide.org/en/latest/starting/install3/linux/) on your machine.
+The script has to be run with python3, so be sure you have it [installed](http://docs.python-guide.org/en/latest/starting/install3/linux/) on your machine.
 To minimize the problems of dependencies and versions, we will take advantage of python's
-[virtualenv] (http://virtualenv.readthedocs.org/en/latest/index.html) tool to create isolated Python environments.
+[virtualenv](http://virtualenv.readthedocs.org/en/latest/index.html) tool to create isolated Python environments.
 Follow [virtualenv](http://virtualenv.readthedocs.org/en/latest/virtualenv.html#installation)'s installation guide.
 Once installed run:
 
